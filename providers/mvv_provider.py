@@ -1,5 +1,6 @@
 import time
 import datetime
+import pytz
 import numpy as np
 from PIL import Image
 from PIL import ImageFont
@@ -20,6 +21,7 @@ class MVVProvider(TextProvider):
         self.font = ImageFont.truetype("fonts/Berkelium1541.ttf", size=6)
         self.textColor = (150,150,20)
         self.titleColor = (100,200,200)
+        self.tz = pytz.timezone('Europe/Berlin')
 
     def displayContent(self, t) -> None:
         image = self.createImageFor(self.station, self.title, self.station_filter)
@@ -52,7 +54,7 @@ class MVVProvider(TextProvider):
                 departure[u'departureTimeMinutes'] = relative_time // datetime.timedelta(seconds=60)   
             #print(departure)     
 
-        title = datetime.datetime.now().strftime('%H:%M') + " " + title
+        title = datetime.datetime.now(self.tz).strftime('%H:%M') + " " + title
         
         ypos = 0;
         super().text(draw, (0, ypos), title, self.titleColor)
@@ -65,7 +67,7 @@ class MVVProvider(TextProvider):
             # line
             #color = color_hex2triplet(item['lineBackgroundColor'])
             #color = color_mult(color, 0.75)
-            color = (100,100,100)
+            color = (70,70,70)
             draw.rectangle([0,ypos, 9,ypos+4], fill=color)
             super().centeredtext(draw, (5, ypos), item['line'])
             
